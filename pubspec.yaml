@@ -1,0 +1,61 @@
+name: quiz_fake_news
+description: A new Flutter project.
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.12.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.2
+  provider: ^6.0.1
+  firebase_core: ^1.8.0
+  firebase_auth: ^3.1.4
+  lottie: ^1.2.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+
+  uses-material-design: true
+  assets:
+    - images/info_screen.png
+    - images/background.png
+
+    - images/questions/fake1.png
+    - images/questions/otherfake.png
+    - images/fakenews.png
+    - images/fakenews1.png
+
+    - animations/gameover.json
+    - animations/timesup.json
+    - animations/confetti.json
+    - animations/levelup.json
+    - animations/congratulations.json
+    - animations/login.json
+    - animations/news.json
+
+  fonts:
+  - family: Medium
+    fonts:
+    - asset: fonts/Roboto-Medium.ttf
+
+  - family: Typographica
+    fonts:
+    - asset: fonts/Typographica-Blp5.ttf
+
+  - family: Regular
+    fonts:
+    - asset: fonts/Roboto-Regular.ttf
+
+  - family: NunitoRegular
+    fonts:
+    - asset: fonts/NunitoRegular.ttf
+
+  - family: NunitoSemibold
+    fonts:
+    - asset: fonts/NunitoSemibold.ttf

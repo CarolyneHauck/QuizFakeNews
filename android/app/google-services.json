@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "937356175175",
+    "project_id": "fake-news-quiz-8bd69",
+    "storage_bucket": "fake-news-quiz-8bd69.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:937356175175:android:fe4331d32bb9b32f62ce62",
+        "android_client_info": {
+          "package_name": "com.example.quiz_fake_news"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "937356175175-naqqgvg34kc9hpe8ke53c9oie30klg32.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD_EGeIpXQfsz-w8vhtoBAuRRn2YSazMZQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "937356175175-naqqgvg34kc9hpe8ke53c9oie30klg32.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
