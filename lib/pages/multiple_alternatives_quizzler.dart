@@ -37,7 +37,7 @@ class QuizzlerWithMultipleAlternativePage extends StatefulWidget {
 
 class _QuizWithMultipleAlternativePageState
     extends State<QuizzlerWithMultipleAlternativePage> {
-  bool status = true;
+  bool status = false;
   bool statusRight = false;
 
   int _counter = 0;
@@ -60,12 +60,6 @@ class _QuizWithMultipleAlternativePageState
         }
         _timer.cancel();
       }
-    });
-  }
-
-  void disableButtonSkip() {
-    setState(() {
-      status = false;
     });
   }
 
@@ -309,7 +303,7 @@ class _QuizWithMultipleAlternativePageState
                         color: Colors.black,
                       ),
                     ),
-                    onPressed: statusRight
+                    onPressed: status
                         ? null
                         : () => whatToDoOnPressedSkip(time: _timer),
                   ),
@@ -349,7 +343,9 @@ class _QuizWithMultipleAlternativePageState
   void whatToDoOnPressedSkip({required Timer time}) {
     time.cancel();
     logicScoreQuiz.decreaseScore(multipleAlternativesQuiz.getPointSkip());
-    disableButtonSkip();
+    setState(() {
+      status = true;
+    });
     nextQuestion();
   }
 

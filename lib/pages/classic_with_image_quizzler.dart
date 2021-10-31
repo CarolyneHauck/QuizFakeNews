@@ -35,7 +35,7 @@ class QuizWithImagePage extends StatefulWidget {
 }
 
 class _QuizWithImagePageState extends State<QuizWithImagePage> {
-  bool status = true;
+  bool status = false;
   bool statusRight = false;
   bool resetTime = false;
 
@@ -64,24 +64,6 @@ class _QuizWithImagePageState extends State<QuizWithImagePage> {
     });
   }
 
-  void disableButtonSkip() {
-    setState(() {
-      status = false;
-    });
-  }
-
-  void enableButtonSkip() {
-    setState(() {
-      status = false;
-    });
-  }
-
-  void enableResetTime() {
-    setState(() {
-      resetTime = true;
-    });
-  }
-
   void checkAnswer(bool userPickedAnswer) {
     bool correctAnswer = classicQuestionWithImageQuiz.getCorrectAnswer();
 
@@ -99,7 +81,9 @@ class _QuizWithImagePageState extends State<QuizWithImagePage> {
       } else {
         if (userPickedAnswer == correctAnswer) {
           if (classicQuestionQuiz.secondQuestion()) {
-            enableButtonSkip();
+            setState(() {
+              status = false;
+            });
           }
           _timer.cancel();
           logicScoreQuiz
@@ -273,7 +257,7 @@ class _QuizWithImagePageState extends State<QuizWithImagePage> {
                         color: Colors.black,
                       ),
                     ),
-                    onPressed: statusRight
+                    onPressed: status
                         ? null
                         : () => whatToDoOnPressedSkip(time: _timer),
                   ),
@@ -313,7 +297,9 @@ class _QuizWithImagePageState extends State<QuizWithImagePage> {
   void whatToDoOnPressedSkip({required Timer time}) {
     time.cancel();
     logicScoreQuiz.decreaseScore(classicQuestionWithImageQuiz.getPointSkip());
-    disableButtonSkip();
+    setState(() {
+      status = true;
+    });
     nextQuestion();
   }
 
