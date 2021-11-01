@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:quiz_fake_news/widgets/middle_congrulations.dart';
 
 import '../start_game.dart';
 
@@ -84,35 +85,5 @@ class StartAgain extends StatelessWidget {
 
     Navigator.of(context)
         .push(MaterialPageRoute(builder: (context) => Start()));
-  }
-}
-
-class Middle extends StatelessWidget {
-  final String score;
-
-  Middle({required this.score});
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      flex: 4,
-      child: Container(
-        decoration: new BoxDecoration(
-          borderRadius: new BorderRadius.circular(16.0),
-          color: Colors.blueGrey,
-        ),
-        child: Center(
-          child: Text(
-            'VOCÊ ACERTOU TODAS AS QUESTÕES\n\n' + 'TOTAL DE PONTOS: ' + score,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-                decoration: TextDecoration.none,
-                color: Colors.black,
-                fontFamily: 'Medium',
-                fontSize: 24),
-          ),
-        ),
-      ),
-    );
   }
 }
