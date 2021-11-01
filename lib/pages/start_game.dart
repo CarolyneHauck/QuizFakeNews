@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quiz_fake_news/pages/rules.dart';
 
 import 'classic_quizzler.dart';
 
@@ -30,13 +31,41 @@ class Start extends StatelessWidget {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: <Widget>[
-                          Padding(padding: EdgeInsets.all(10.0)),
+                          SizedBox(
+                            width: double.infinity,
+                            child: RawMaterialButton(
+                              fillColor: Colors.blueGrey,
+                              child: Padding(
+                                padding: EdgeInsets.all(6.0),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: const <Widget>[
+                                    Text(
+                                      "VERIFIQUE AS REGRAS!",
+                                      maxLines: 1,
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontFamily: 'Medium',
+                                        fontSize: 20.0,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              onPressed: () {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => Rules()));
+                              },
+                              shape: const StadiumBorder(),
+                            ),
+                          ),
+                          Padding(padding: EdgeInsets.all(2.0)),
                           SizedBox(
                             width: double.infinity,
                             child: RawMaterialButton(
                               fillColor: Colors.white,
                               child: Padding(
-                                padding: EdgeInsets.all(10.0),
+                                padding: EdgeInsets.all(6.0),
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: const <Widget>[

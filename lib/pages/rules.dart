@@ -1,17 +1,8 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:quiz_fake_news/pages/start_game.dart';
 
-import '../start_game.dart';
-
-class Congratulations extends StatelessWidget {
-  final String score;
-
-  final Timer time;
-
-  Congratulations({required this.score, required this.time});
-
+class Rules extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -27,10 +18,29 @@ class Congratulations extends StatelessWidget {
             flex: 1,
             child: SizedBox(width: 5.0),
           ),
+          Expanded(flex: 5, child: Lottie.asset("animations/news.json")),
           Expanded(
-              flex: 5, child: Lottie.asset("animations/congratulations.json")),
-          Middle(score: score),
-          StartAgain(time: time),
+            flex: 4,
+            child: Container(
+              decoration: new BoxDecoration(
+                borderRadius: new BorderRadius.circular(16.0),
+                color: Colors.blueGrey,
+              ),
+              child: Center(
+                child: Text(
+                  'REGRAS:\n\n 1 - Se errar alguma questao o jogo acaba.\n 2 - Quanto mais rápido responder mais pontos ira ganhar.\n 3 - Apenas um PULAR e ACERTAR por nível.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    decoration: TextDecoration.none,
+                    color: Colors.black,
+                    fontFamily: 'Medium',
+                    fontSize: 22,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          StartAgain(),
         ],
       ),
     );
@@ -38,10 +48,6 @@ class Congratulations extends StatelessWidget {
 }
 
 class StartAgain extends StatelessWidget {
-  final Timer time;
-
-  StartAgain({required this.time});
-
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -58,7 +64,7 @@ class StartAgain extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: const <Widget>[
                   Text(
-                    "SAIR!",
+                    "VOLTAR!",
                     maxLines: 1,
                     style: TextStyle(
                       color: Colors.black,
@@ -80,39 +86,7 @@ class StartAgain extends StatelessWidget {
   }
 
   void _navigateToNextScreen(BuildContext context) {
-    time.cancel();
-
     Navigator.of(context)
         .push(MaterialPageRoute(builder: (context) => Start()));
-  }
-}
-
-class Middle extends StatelessWidget {
-  final String score;
-
-  Middle({required this.score});
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      flex: 4,
-      child: Container(
-        decoration: new BoxDecoration(
-          borderRadius: new BorderRadius.circular(16.0),
-          color: Colors.blueGrey,
-        ),
-        child: Center(
-          child: Text(
-            'VOCÊ ACERTOU TODAS AS QUESTÕES\n\n' + 'TOTAL DE PONTOS: ' + score,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-                decoration: TextDecoration.none,
-                color: Colors.black,
-                fontFamily: 'Medium',
-                fontSize: 24),
-          ),
-        ),
-      ),
-    );
   }
 }

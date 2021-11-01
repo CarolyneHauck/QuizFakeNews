@@ -101,13 +101,13 @@ class Middle extends StatelessWidget {
         ),
         child: Center(
           child: Text(
-            'VOCÊ ACERTOU TODAS AS QUESTÕES\n' + score,
+            'VOCÊ ACERTOU TODAS AS QUESTÕES\n\n' + 'TOTAL DE PONTOS: ' + score,
             textAlign: TextAlign.center,
             style: TextStyle(
-              decoration: TextDecoration.none,
-              color: Colors.black,
-              fontFamily: 'Medium',
-            ),
+                decoration: TextDecoration.none,
+                color: Colors.black,
+                fontFamily: 'Medium',
+                fontSize: 24),
           ),
         ),
       ),

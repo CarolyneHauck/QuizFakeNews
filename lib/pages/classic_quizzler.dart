@@ -91,7 +91,8 @@ class _QuizPageState extends State<QuizPage> {
             enableButtonSkip();
           }
           _timer.cancel();
-          logicScoreQuiz.incrementScore(classicQuestionQuiz.getPointAnswer());
+          logicScoreQuiz.incrementScore(logicScoreQuiz.calculationScore(
+              classicQuestionQuiz.getPointAnswer(), _counter));
         } else {
           _timer.cancel();
           Navigator.of(context).push(MaterialPageRoute(
@@ -298,7 +299,8 @@ class _QuizPageState extends State<QuizPage> {
 
   void whatToDoOnPressedRight({required Timer time}) {
     time.cancel();
-    logicScoreQuiz.incrementScore(classicQuestionQuiz.getPointRight());
+    logicScoreQuiz.incrementScore(logicScoreQuiz.calculationScore(
+        classicQuestionQuiz.getPointRight(), _counter));
     setState(() {
       statusRight = true;
     });

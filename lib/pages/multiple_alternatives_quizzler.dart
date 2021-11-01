@@ -74,8 +74,8 @@ class _QuizWithMultipleAlternativePageState
 
     setState(() {
       if (multipleAlternativesQuiz.isFinished() == true) {
-        logicScoreQuiz
-            .incrementScore(multipleAlternativesQuiz.getPointAnswer());
+        logicScoreQuiz.incrementScore(logicScoreQuiz.calculationScore(
+            multipleAlternativesQuiz.getPointRight(), _counter));
 
         Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => Congratulations(
@@ -89,8 +89,8 @@ class _QuizWithMultipleAlternativePageState
             enableButtonSkip();
           }
           _timer.cancel();
-          logicScoreQuiz
-              .incrementScore(multipleAlternativesQuiz.getPointAnswer());
+          logicScoreQuiz.incrementScore(logicScoreQuiz.calculationScore(
+              multipleAlternativesQuiz.getPointRight(), _counter));
         } else {
           _timer.cancel();
           Navigator.of(context).push(MaterialPageRoute(
@@ -351,7 +351,8 @@ class _QuizWithMultipleAlternativePageState
 
   void whatToDoOnPressedRight({required Timer time}) {
     time.cancel();
-    logicScoreQuiz.incrementScore(multipleAlternativesQuiz.getPointRight());
+    logicScoreQuiz.incrementScore(logicScoreQuiz.calculationScore(
+        multipleAlternativesQuiz.getPointRight(), _counter));
     setState(() {
       statusRight = true;
     });

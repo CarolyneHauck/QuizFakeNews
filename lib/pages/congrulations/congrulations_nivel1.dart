@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:quiz_fake_news/pages/classic_with_image_quizzler.dart';
+import 'package:share/share.dart';
 
 class CongratulationsNivel1 extends StatelessWidget {
   final String score;
@@ -98,16 +99,35 @@ class Middle extends StatelessWidget {
           borderRadius: new BorderRadius.circular(16.0),
           color: Colors.blueGrey,
         ),
-        child: Center(
-          child: Text(
-            'VOCÊ ACERTOU TODAS AS QUESTÕES\n' + score,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              decoration: TextDecoration.none,
-              color: Colors.black,
-              fontFamily: 'Medium',
+        child: Column(
+          children: [
+            SizedBox(height: 30.0),
+            Text(
+              'VOCÊ ACERTOU TODAS AS QUESTÕES\n\n' +
+                  'TOTAL DE PONTOS: ' +
+                  score,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  decoration: TextDecoration.none,
+                  color: Colors.black,
+                  fontFamily: 'Medium',
+                  fontSize: 24),
             ),
-          ),
+            SizedBox(height: 20.0),
+            Material(
+              color: Colors.blueGrey,
+              child: IconButton(
+                icon: Icon(Icons.share),
+                iconSize: 50,
+                onPressed: () {
+                  Share.share(
+                      'Acertei todas as questões do jogo CheckIsso! e fiz um total de ' +
+                          score +
+                          'pontos, seja um perito em identificar Fake News também! Faça download do app!');
+                },
+              ),
+            ),
+          ],
         ),
       ),
     );

@@ -69,8 +69,8 @@ class _QuizWithImagePageState extends State<QuizWithImagePage> {
 
     setState(() {
       if (classicQuestionWithImageQuiz.isFinished() == true) {
-        logicScoreQuiz
-            .incrementScore(classicQuestionWithImageQuiz.getPointAnswer());
+        logicScoreQuiz.incrementScore(logicScoreQuiz.calculationScore(
+            classicQuestionWithImageQuiz.getPointRight(), _counter));
 
         Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => CongratulationsNivel2(
@@ -86,8 +86,8 @@ class _QuizWithImagePageState extends State<QuizWithImagePage> {
             });
           }
           _timer.cancel();
-          logicScoreQuiz
-              .incrementScore(classicQuestionWithImageQuiz.getPointAnswer());
+          logicScoreQuiz.incrementScore(logicScoreQuiz.calculationScore(
+              classicQuestionWithImageQuiz.getPointRight(), _counter));
         } else {
           _timer.cancel();
           Navigator.of(context).push(MaterialPageRoute(
@@ -305,7 +305,8 @@ class _QuizWithImagePageState extends State<QuizWithImagePage> {
 
   void whatToDoOnPressedRight({required Timer time}) {
     time.cancel();
-    logicScoreQuiz.incrementScore(classicQuestionWithImageQuiz.getPointRight());
+    logicScoreQuiz.incrementScore(logicScoreQuiz.calculationScore(
+        classicQuestionWithImageQuiz.getPointRight(), _counter));
     setState(() {
       statusRight = true;
     });

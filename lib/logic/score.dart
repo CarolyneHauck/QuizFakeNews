@@ -14,6 +14,10 @@ class LogicScoreQuiz {
     return _score;
   }
 
+  int calculationScore(int pointQuestion, int time) {
+    return (pointQuestion * (time / 3)).round();
+  }
+
   void resetScore() {
     _score = 0;
   }

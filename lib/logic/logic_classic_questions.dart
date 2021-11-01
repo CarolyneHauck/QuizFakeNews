@@ -5,7 +5,7 @@ class LogicClassicQuestionQuiz {
 
   List<ClassicQuestion> _classicQuestionBank = [
     ClassicQuestion(
-      4000,
+      1000,
       30,
       5000,
       3000,
@@ -14,7 +14,7 @@ class LogicClassicQuestionQuiz {
       true,
     ),
     ClassicQuestion(
-      4000,
+      1000,
       60,
       5000,
       3000,
@@ -23,7 +23,7 @@ class LogicClassicQuestionQuiz {
       true,
     ),
     ClassicQuestion(
-      4000,
+      1000,
       60,
       5000,
       3000,
@@ -32,7 +32,7 @@ class LogicClassicQuestionQuiz {
       true,
     ),
     ClassicQuestion(
-      4000,
+      1000,
       30,
       5000,
       3000,
@@ -41,7 +41,7 @@ class LogicClassicQuestionQuiz {
       false,
     ),
     ClassicQuestion(
-      4000,
+      1000,
       60,
       5000,
       3000,
