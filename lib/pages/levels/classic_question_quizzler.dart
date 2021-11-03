@@ -1,128 +1,175 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:quiz_fake_news/logic/logic_classic_questions.dart';
+import 'package:quiz_fake_news/controller/level1_controller.dart';
 import 'package:quiz_fake_news/logic/score.dart';
+import 'package:quiz_fake_news/models/types_questions/classic_question.dart';
+import 'package:quiz_fake_news/pages/game_over.dart';
 import 'package:quiz_fake_news/pages/time_is_up.dart';
 import 'package:quiz_fake_news/widgets/counter_time.dart';
 import 'package:quiz_fake_news/widgets/question_description.dart';
 import 'package:quiz_fake_news/widgets/stop_question.dart';
 
-import 'congrulations/congrulations_nivel1.dart';
-import 'game_over.dart';
-
-LogicClassicQuestionQuiz classicQuestionQuiz = LogicClassicQuestionQuiz();
+import '../congrulations/congrulations_nivel1.dart';
 
 LogicScoreQuiz logicScoreQuiz = LogicScoreQuiz();
 
-class Quizzler extends StatelessWidget {
+class PageHome extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.grey.shade900,
-      body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10.0),
-          child: QuizPage(),
-        ),
-      ),
-    );
-  }
+  _PageHomeState createState() => _PageHomeState();
 }
 
-class QuizPage extends StatefulWidget {
-  @override
-  _QuizPageState createState() => _QuizPageState();
-}
+class _PageHomeState extends State<PageHome> {
+  final controller = Level1Controller();
 
-class _QuizPageState extends State<QuizPage> {
+  int _counter = 0;
+  late Timer _timer;
+  int _questionNumber = 0;
+
   bool status = true;
   bool statusRight = false;
   bool resetTime = false;
 
-  int _counter = 0;
-  late Timer _timer;
-
   void _startTimer() {
-    _counter = classicQuestionQuiz.getCounter();
+    _counter = 30;
     _timer = Timer.periodic(Duration(seconds: 1), (timer) {
       if (_counter > 0) {
         setState(() {
           _counter--;
         });
       } else {
-        if (classicQuestionQuiz.isFinished() == false) {
-          _timer.cancel();
-          Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) =>
-                  TimeIsUp(score: logicScoreQuiz.totalScore(), time: _timer)));
-        }
-        _timer.cancel();
-      }
-    });
-  }
-
-  void disableButtonSkip() {
-    setState(() {
-      status = true;
-    });
-  }
-
-  void enableButtonSkip() {
-    setState(() {
-      status = false;
-    });
-  }
-
-  void checkAnswer(bool userPickedAnswer) {
-    bool correctAnswer = classicQuestionQuiz.getCorrectAnswer();
-
-    setState(() {
-      if (classicQuestionQuiz.isFinished() == true) {
         Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => CongratulationsNivel1(
-                score: logicScoreQuiz.totalScore().toString(), time: _timer)));
+            builder: (context) =>
+                TimeIsUp(score: logicScoreQuiz.totalScore(), time: _timer)));
 
         _timer.cancel();
-        classicQuestionQuiz.reset();
-      } else {
-        if (userPickedAnswer == correctAnswer) {
-          if (classicQuestionQuiz.secondQuestion()) {
-            enableButtonSkip();
-          }
-          _timer.cancel();
-          logicScoreQuiz.incrementScore(logicScoreQuiz.calculationScore(
-              classicQuestionQuiz.getPointAnswer(), _counter));
-        } else {
-          _timer.cancel();
-          Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) =>
-                  GameOver(score: logicScoreQuiz.totalScore(), time: _timer)));
-        }
-        _timer.cancel();
-        _startTimer();
-        classicQuestionQuiz.nextQuestion();
       }
-    });
-  }
-
-  void nextQuestion() {
-    setState(() {
-      _timer.cancel();
-      _startTimer();
-      disableButtonSkip();
-      classicQuestionQuiz.nextQuestion();
     });
   }
 
   @override
   void initState() {
-    _startTimer();
     super.initState();
+    controller.start();
+    _startTimer();
   }
 
-  @override
-  Widget build(BuildContext context) {
+  _success() {
+    List<ClassicQuestion> _classicQuestionBank = controller.todos;
+
+    void nextQuestion() {
+      if (_questionNumber < _classicQuestionBank.length - 1) {
+        print(_classicQuestionBank.length);
+        _questionNumber++;
+      }
+    }
+
+    bool secondQuestion() {
+      if (_questionNumber == 1) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+
+    String getQuestionText() {
+      return _classicQuestionBank[_questionNumber].questionText;
+    }
+
+    bool getCorrectAnswer() {
+      return _classicQuestionBank[_questionNumber].questionAnswer;
+    }
+
+    int getPointAnswer() {
+      return _classicQuestionBank[_questionNumber].questionPoint;
+    }
+
+    int getPointSkip() {
+      return _classicQuestionBank[_questionNumber].skipPoint;
+    }
+
+    int getPointStop() {
+      return _classicQuestionBank[_questionNumber].stopPoint;
+    }
+
+    int getPointRight() {
+      return _classicQuestionBank[_questionNumber].rightPoint;
+    }
+
+    bool isFinished() {
+      if (_questionNumber >= _classicQuestionBank.length - 1) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+
+    void reset() {
+      _questionNumber = 0;
+    }
+
+    void disableButtonSkip() {
+      setState(() {
+        status = true;
+      });
+    }
+
+    void enableButtonSkip() {
+      setState(() {
+        status = false;
+      });
+    }
+
+    void checkAnswer(bool userPickedAnswer) {
+      bool correctAnswer = getCorrectAnswer();
+
+      setState(() {
+        if (isFinished() == true) {
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => CongratulationsNivel1(
+                  score: logicScoreQuiz.totalScore().toString(),
+                  time: _timer)));
+
+          _timer.cancel();
+          reset();
+        } else {
+          if (userPickedAnswer == correctAnswer) {
+            if (secondQuestion()) {
+              enableButtonSkip();
+            }
+            _timer.cancel();
+            logicScoreQuiz.incrementScore(
+                logicScoreQuiz.calculationScore(getPointAnswer(), _counter));
+          } else {
+            _timer.cancel();
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => GameOver(
+                    score: logicScoreQuiz.totalScore(), time: _timer)));
+          }
+          _timer.cancel();
+          _startTimer();
+          nextQuestion();
+        }
+      });
+    }
+
+    void whatToDoOnPressedSkip({required Timer time}) {
+      time.cancel();
+      logicScoreQuiz.decreaseScore(getPointSkip());
+      disableButtonSkip();
+      nextQuestion();
+    }
+
+    void whatToDoOnPressedRight({required Timer time}) {
+      time.cancel();
+      logicScoreQuiz.incrementScore(
+          logicScoreQuiz.calculationScore(getPointRight(), _counter));
+      setState(() {
+        statusRight = true;
+      });
+      nextQuestion();
+    }
+
     return Container(
       decoration: BoxDecoration(
         image: DecorationImage(
@@ -135,8 +182,7 @@ class _QuizPageState extends State<QuizPage> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           CounterPoints(points: logicScoreQuiz.totalScore().toString()),
-          QuestionDescription(
-              description: classicQuestionQuiz.getQuestionText(), size: 5),
+          QuestionDescription(description: getQuestionText(), size: 5),
           Expanded(
             flex: 1,
             child: SafeArea(
@@ -244,9 +290,7 @@ class _QuizPageState extends State<QuizPage> {
                       ),
                     ),
                     child: Text(
-                      '-' +
-                          classicQuestionQuiz.getPointSkip().toString() +
-                          '\nPULAR',
+                      '-' + getPointSkip().toString() + '\nPULAR',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 20.0,
@@ -257,9 +301,7 @@ class _QuizPageState extends State<QuizPage> {
                         ? null
                         : () => whatToDoOnPressedSkip(time: _timer),
                   ),
-                  StopQuestion(
-                      pointsStop: classicQuestionQuiz.getPointStop(),
-                      time: _timer),
+                  StopQuestion(pointsStop: getPointStop(), time: _timer),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       primary: Colors.white,
@@ -269,8 +311,7 @@ class _QuizPageState extends State<QuizPage> {
                       ),
                     ),
                     child: Text(
-                      classicQuestionQuiz.getPointRight().toString() +
-                          '\nACERTAR',
+                      getPointRight().toString() + '\nACERTAR',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 20.0,
@@ -290,20 +331,43 @@ class _QuizPageState extends State<QuizPage> {
     );
   }
 
-  void whatToDoOnPressedSkip({required Timer time}) {
-    time.cancel();
-    logicScoreQuiz.decreaseScore(classicQuestionQuiz.getPointSkip());
-    disableButtonSkip();
-    nextQuestion();
+  _error() {
+    return Center(
+        child: RaisedButton(onPressed: () {}, child: Text('Tentar novamente')));
   }
 
-  void whatToDoOnPressedRight({required Timer time}) {
-    time.cancel();
-    logicScoreQuiz.incrementScore(logicScoreQuiz.calculationScore(
-        classicQuestionQuiz.getPointRight(), _counter));
-    setState(() {
-      statusRight = true;
-    });
-    nextQuestion();
+  _start() {
+    return Center(child: CircularProgressIndicator());
+  }
+
+  _loading() {
+    return Center(child: CircularProgressIndicator());
+  }
+
+  stateManagement(Level1State state) {
+    switch (state) {
+      case Level1State.start:
+        return _start();
+      case Level1State.loading:
+        return _loading();
+      case Level1State.success:
+        return _success();
+      case Level1State.error:
+        return _error();
+      default:
+        return _start();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: AnimatedBuilder(
+        animation: controller.state,
+        builder: (context, child) {
+          return stateManagement(controller.state.value);
+        },
+      ),
+    );
   }
 }

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:quiz_fake_news/logic/score.dart';
 import 'package:quiz_fake_news/pages/rules.dart';
 
-import 'classic_quizzler.dart';
+import 'levels/classic_question_quizzler.dart';
+
+LogicScoreQuiz logicScoreQuiz = LogicScoreQuiz();
 
 class Start extends StatelessWidget {
   @override
@@ -90,7 +93,6 @@ class Start extends StatelessWidget {
                               ),
                               onPressed: () {
                                 logicScoreQuiz.resetScore();
-                                classicQuestionQuiz.reset();
                                 _navigateToNextScreen(context);
                               },
                               shape: const StadiumBorder(),
@@ -111,6 +113,6 @@ class Start extends StatelessWidget {
 
   void _navigateToNextScreen(BuildContext context) {
     Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => Quizzler()));
+        .push(MaterialPageRoute(builder: (context) => PageHome()));
   }
 }

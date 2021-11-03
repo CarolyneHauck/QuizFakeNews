@@ -1,8 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:quiz_fake_news/pages/classic_quizzler.dart';
+import 'package:quiz_fake_news/logic/score.dart';
 import 'package:quiz_fake_news/pages/game_over.dart';
+
+LogicScoreQuiz logicScoreQuiz = LogicScoreQuiz();
 
 class StopQuestion extends StatelessWidget {
   final int pointsStop;

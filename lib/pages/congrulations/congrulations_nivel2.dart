@@ -2,9 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:quiz_fake_news/pages/levels/multiple_alternatives_quizzler.dart';
 import 'package:quiz_fake_news/widgets/middle_congrulations.dart';
-
-import '../multiple_alternatives_quizzler.dart';
 
 class CongratulationsNivel2 extends StatelessWidget {
   final String score;
@@ -81,7 +80,7 @@ class StartAgain extends StatelessWidget {
   void _navigateToNextScreen(BuildContext context) {
     time.cancel();
 
-    Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => QuizzlerWithMultipleAlternatives()));
+    Navigator.of(context).push(
+        MaterialPageRoute(builder: (context) => MultipleAlternativesPage()));
   }
 }

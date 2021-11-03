@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:quiz_fake_news/pages/classic_quizzler.dart';
+import 'package:quiz_fake_news/pages/levels/classic_question_quizzler.dart';
 import 'package:quiz_fake_news/pages/login_page.dart';
 import 'package:quiz_fake_news/services/auth_service.dart';
 
@@ -21,7 +21,7 @@ class _AuthCheckState extends State<AuthCheck> {
     else if (auth.usuario == null)
       return LoginPage();
     else
-      return Quizzler();
+      return PageHome();
   }
 
   loading() {

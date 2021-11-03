@@ -1,134 +1,175 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:quiz_fake_news/logic/logic_multiple_alternatives.dart';
+import 'package:quiz_fake_news/controller/level3_controller.dart';
+import 'package:quiz_fake_news/logic/score.dart';
+import 'package:quiz_fake_news/models/types_questions/multiple_alternatives.dart';
+import 'package:quiz_fake_news/pages/congrulations/congrulations_final.dart';
+import 'package:quiz_fake_news/pages/game_over.dart';
 import 'package:quiz_fake_news/pages/time_is_up.dart';
 import 'package:quiz_fake_news/widgets/counter_time.dart';
 import 'package:quiz_fake_news/widgets/question_description.dart';
 import 'package:quiz_fake_news/widgets/stop_question.dart';
 
-import 'classic_quizzler.dart';
-import 'congrulations/congrulations_final.dart';
-import 'game_over.dart';
+LogicScoreQuiz logicScoreQuiz = LogicScoreQuiz();
 
-LogicMultipleAlternativesQuiz multipleAlternativesQuiz =
-    LogicMultipleAlternativesQuiz();
-
-class QuizzlerWithMultipleAlternatives extends StatelessWidget {
+class MultipleAlternativesPage extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.grey.shade900,
-      body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10.0),
-          child: QuizzlerWithMultipleAlternativePage(),
-        ),
-      ),
-    );
-  }
+  _MultipleAlternativesPageState createState() =>
+      _MultipleAlternativesPageState();
 }
 
-class QuizzlerWithMultipleAlternativePage extends StatefulWidget {
-  @override
-  _QuizWithMultipleAlternativePageState createState() =>
-      _QuizWithMultipleAlternativePageState();
-}
-
-class _QuizWithMultipleAlternativePageState
-    extends State<QuizzlerWithMultipleAlternativePage> {
-  bool status = false;
-  bool statusRight = false;
+class _MultipleAlternativesPageState extends State<MultipleAlternativesPage> {
+  final controller = Level3Controller();
 
   int _counter = 0;
   late Timer _timer;
-  int finalScore = 0;
+  int _questionNumber = 0;
+
+  bool status = true;
+  bool statusRight = false;
+  bool resetTime = false;
 
   void _startTimer() {
-    _counter = multipleAlternativesQuiz.getCounter();
+    _counter = 30;
     _timer = Timer.periodic(Duration(seconds: 1), (timer) {
       if (_counter > 0) {
         setState(() {
           _counter--;
         });
       } else {
-        if (multipleAlternativesQuiz.isFinished() == false) {
-          _timer.cancel();
-          Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) =>
-                  TimeIsUp(score: logicScoreQuiz.totalScore(), time: _timer)));
-        }
-        _timer.cancel();
-      }
-    });
-  }
-
-  void enableButtonSkip() {
-    setState(() {
-      status = false;
-    });
-  }
-
-  void checkAnswerWithMultipleAlternatives(String userPickedAnswer) {
-    String correctAnswer = multipleAlternativesQuiz.getQuestionAnswer();
-
-    setState(() {
-      if (multipleAlternativesQuiz.isFinished() == true) {
-        logicScoreQuiz.incrementScore(logicScoreQuiz.calculationScore(
-            multipleAlternativesQuiz.getPointRight(), _counter));
-
         Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => Congratulations(
-                score: logicScoreQuiz.totalScore().toString(), time: _timer)));
+            builder: (context) =>
+                TimeIsUp(score: logicScoreQuiz.totalScore(), time: _timer)));
 
         _timer.cancel();
-        multipleAlternativesQuiz.reset();
-      } else {
-        if (userPickedAnswer == correctAnswer) {
-          if (classicQuestionQuiz.secondQuestion()) {
-            enableButtonSkip();
-          }
-          _timer.cancel();
-          logicScoreQuiz.incrementScore(logicScoreQuiz.calculationScore(
-              multipleAlternativesQuiz.getPointRight(), _counter));
-        } else {
-          _timer.cancel();
-          Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) =>
-                  GameOver(score: logicScoreQuiz.totalScore(), time: _timer)));
-        }
-
-        _timer.cancel();
-        _startTimer();
-        multipleAlternativesQuiz.nextQuestion();
-      }
-    });
-  }
-
-  void nextQuestion() {
-    setState(() {
-      if (multipleAlternativesQuiz.isFinished() == true) {
-        Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => Congratulations(
-                score: logicScoreQuiz.totalScore().toString(), time: _timer)));
-
-        multipleAlternativesQuiz.reset();
-      } else {
-        _timer.cancel();
-        _startTimer();
-        multipleAlternativesQuiz.nextQuestion();
       }
     });
   }
 
   @override
   void initState() {
-    _startTimer();
     super.initState();
+    controller.startLevel3();
+    _startTimer();
   }
 
-  @override
-  Widget build(BuildContext context) {
+  _success() {
+    List<MultipleAlternative> _multipleAlternatives =
+        controller.multipleAlternatives;
+
+    void nextQuestion() {
+      if (_questionNumber < _multipleAlternatives.length - 1) {
+        print(_multipleAlternatives.length);
+        _questionNumber++;
+      }
+    }
+
+    String getQuestionDescription() {
+      return _multipleAlternatives[_questionNumber].questionDescription;
+    }
+
+    String getQuestionAnswer() {
+      return _multipleAlternatives[_questionNumber].answer;
+    }
+
+    String getAlternativeA() {
+      return _multipleAlternatives[_questionNumber].alternativeA;
+    }
+
+    String getAlternativeB() {
+      return _multipleAlternatives[_questionNumber].alternativeB;
+    }
+
+    String getAlternativeC() {
+      return _multipleAlternatives[_questionNumber].alternativeC;
+    }
+
+    String getAlternativeD() {
+      return _multipleAlternatives[_questionNumber].alternativeD;
+    }
+
+    int getPointSkip() {
+      return _multipleAlternatives[_questionNumber].skipPoint;
+    }
+
+    int getPointStop() {
+      return _multipleAlternatives[_questionNumber].stopPoint;
+    }
+
+    int getPointRight() {
+      return _multipleAlternatives[_questionNumber].rightPoint;
+    }
+
+    bool isFinished() {
+      if (_questionNumber >= _multipleAlternatives.length - 1) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+
+    void reset() {
+      _questionNumber = 0;
+    }
+
+    void disableButtonSkip() {
+      setState(() {
+        status = true;
+      });
+    }
+
+    void checkAnswerWithMultipleAlternatives(String userPickedAnswer) {
+      String correctAnswer = getQuestionAnswer();
+
+      setState(() {
+        if (isFinished() == true) {
+          logicScoreQuiz.incrementScore(
+              logicScoreQuiz.calculationScore(getPointRight(), _counter));
+
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => Congratulations(
+                  score: logicScoreQuiz.totalScore().toString(),
+                  time: _timer)));
+
+          _timer.cancel();
+          reset();
+        } else {
+          if (userPickedAnswer == correctAnswer) {
+            _timer.cancel();
+            logicScoreQuiz.incrementScore(
+                logicScoreQuiz.calculationScore(getPointRight(), _counter));
+          } else {
+            _timer.cancel();
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => GameOver(
+                    score: logicScoreQuiz.totalScore(), time: _timer)));
+          }
+
+          _timer.cancel();
+          _startTimer();
+          nextQuestion();
+        }
+      });
+    }
+
+    void whatToDoOnPressedSkip({required Timer time}) {
+      time.cancel();
+      logicScoreQuiz.decreaseScore(getPointSkip());
+      disableButtonSkip();
+      nextQuestion();
+    }
+
+    void whatToDoOnPressedRight({required Timer time}) {
+      time.cancel();
+      logicScoreQuiz.incrementScore(
+          logicScoreQuiz.calculationScore(getPointRight(), _counter));
+      setState(() {
+        statusRight = true;
+      });
+      nextQuestion();
+    }
+
     return Container(
       decoration: BoxDecoration(
         image: DecorationImage(
@@ -141,10 +182,7 @@ class _QuizWithMultipleAlternativePageState
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           CounterPoints(points: logicScoreQuiz.totalScore().toString()),
-          QuestionDescription(
-            description: multipleAlternativesQuiz.getQuestionDescription(),
-            size: 2,
-          ),
+          QuestionDescription(description: getQuestionDescription(), size: 5),
           Expanded(
             flex: 1,
             child: Padding(
@@ -155,16 +193,15 @@ class _QuizWithMultipleAlternativePageState
                   decoration: const BoxDecoration(color: Colors.white),
                   child: TextButton(
                     onPressed: () {
-                      checkAnswerWithMultipleAlternatives(
-                          multipleAlternativesQuiz.getAlternativeA());
+                      checkAnswerWithMultipleAlternatives(getAlternativeA());
                     },
                     child: Text(
-                      multipleAlternativesQuiz.getAlternativeA(),
+                      getAlternativeA(),
                       maxLines: 1,
                       style: TextStyle(
                         color: Colors.black,
                         fontFamily: 'NunitoSemibold',
-                        fontSize: 16.0,
+                        fontSize: 14.0,
                       ),
                     ),
                   ),
@@ -182,16 +219,15 @@ class _QuizWithMultipleAlternativePageState
                   decoration: const BoxDecoration(color: Colors.white),
                   child: TextButton(
                     onPressed: () {
-                      checkAnswerWithMultipleAlternatives(
-                          multipleAlternativesQuiz.getAlternativeB());
+                      checkAnswerWithMultipleAlternatives(getAlternativeB());
                     },
                     child: Text(
-                      multipleAlternativesQuiz.getAlternativeB(),
+                      getAlternativeB(),
                       maxLines: 1,
                       style: TextStyle(
                         color: Colors.black,
                         fontFamily: 'NunitoSemibold',
-                        fontSize: 16.0,
+                        fontSize: 14.0,
                       ),
                     ),
                   ),
@@ -209,16 +245,15 @@ class _QuizWithMultipleAlternativePageState
                   decoration: const BoxDecoration(color: Colors.white),
                   child: TextButton(
                     onPressed: () {
-                      checkAnswerWithMultipleAlternatives(
-                          multipleAlternativesQuiz.getAlternativeC());
+                      checkAnswerWithMultipleAlternatives(getAlternativeC());
                     },
                     child: Text(
-                      multipleAlternativesQuiz.getAlternativeC(),
+                      getAlternativeC(),
                       maxLines: 1,
                       style: TextStyle(
                         color: Colors.black,
                         fontFamily: 'NunitoSemibold',
-                        fontSize: 16.0,
+                        fontSize: 14.0,
                       ),
                     ),
                   ),
@@ -236,16 +271,15 @@ class _QuizWithMultipleAlternativePageState
                   decoration: const BoxDecoration(color: Colors.white),
                   child: TextButton(
                     onPressed: () {
-                      checkAnswerWithMultipleAlternatives(
-                          multipleAlternativesQuiz.getAlternativeD());
+                      checkAnswerWithMultipleAlternatives(getAlternativeD());
                     },
                     child: Text(
-                      multipleAlternativesQuiz.getAlternativeD(),
+                      getAlternativeD(),
                       maxLines: 1,
                       style: TextStyle(
                         color: Colors.black,
                         fontFamily: 'NunitoSemibold',
-                        fontSize: 16.0,
+                        fontSize: 14.0,
                       ),
                     ),
                   ),
@@ -266,9 +300,9 @@ class _QuizWithMultipleAlternativePageState
                       style: TextStyle(
                           color: Colors.black,
                           fontFamily: 'Medium',
-                          fontSize: 22),
+                          fontSize: 20),
                     ),
-                    radius: 22.0,
+                    radius: 20.0,
                   ),
                 ],
               ),
@@ -294,9 +328,7 @@ class _QuizWithMultipleAlternativePageState
                       ),
                     ),
                     child: Text(
-                      '-' +
-                          multipleAlternativesQuiz.getPointSkip().toString() +
-                          '\nPULAR',
+                      '-' + getPointSkip().toString() + '\nPULAR',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 20.0,
@@ -307,9 +339,7 @@ class _QuizWithMultipleAlternativePageState
                         ? null
                         : () => whatToDoOnPressedSkip(time: _timer),
                   ),
-                  StopQuestion(
-                      pointsStop: multipleAlternativesQuiz.getPointStop(),
-                      time: _timer),
+                  StopQuestion(pointsStop: getPointStop(), time: _timer),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       primary: Colors.white,
@@ -319,8 +349,7 @@ class _QuizWithMultipleAlternativePageState
                       ),
                     ),
                     child: Text(
-                      multipleAlternativesQuiz.getPointRight().toString() +
-                          '\nACERTAR',
+                      getPointRight().toString() + '\nACERTAR',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 20.0,
@@ -340,22 +369,43 @@ class _QuizWithMultipleAlternativePageState
     );
   }
 
-  void whatToDoOnPressedSkip({required Timer time}) {
-    time.cancel();
-    logicScoreQuiz.decreaseScore(multipleAlternativesQuiz.getPointSkip());
-    setState(() {
-      status = true;
-    });
-    nextQuestion();
+  _error() {
+    return Center(
+        child: RaisedButton(onPressed: () {}, child: Text('Tentar novamente')));
   }
 
-  void whatToDoOnPressedRight({required Timer time}) {
-    time.cancel();
-    logicScoreQuiz.incrementScore(logicScoreQuiz.calculationScore(
-        multipleAlternativesQuiz.getPointRight(), _counter));
-    setState(() {
-      statusRight = true;
-    });
-    nextQuestion();
+  _start() {
+    return Center(child: CircularProgressIndicator());
+  }
+
+  _loading() {
+    return Center(child: CircularProgressIndicator());
+  }
+
+  stateManagement(Level3State state) {
+    switch (state) {
+      case Level3State.start:
+        return _start();
+      case Level3State.loading:
+        return _loading();
+      case Level3State.success:
+        return _success();
+      case Level3State.error:
+        return _error();
+      default:
+        return _start();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: AnimatedBuilder(
+        animation: controller.state,
+        builder: (context, child) {
+          return stateManagement(controller.state.value);
+        },
+      ),
+    );
   }
 }

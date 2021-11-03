@@ -1,131 +1,174 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:quiz_fake_news/logic/logic_classic_questions_with_image.dart';
+import 'package:quiz_fake_news/controller/level2_controller.dart';
+import 'package:quiz_fake_news/logic/score.dart';
+import 'package:quiz_fake_news/models/types_questions/classic_with_image.dart';
+import 'package:quiz_fake_news/pages/congrulations/congrulations_nivel2.dart';
+import 'package:quiz_fake_news/pages/game_over.dart';
 import 'package:quiz_fake_news/pages/time_is_up.dart';
 import 'package:quiz_fake_news/widgets/counter_time.dart';
-import 'package:quiz_fake_news/widgets/question_image.dart';
 import 'package:quiz_fake_news/widgets/stop_question.dart';
 
-import 'classic_quizzler.dart';
-import 'congrulations/congrulations_nivel2.dart';
-import 'game_over.dart';
+LogicScoreQuiz logicScoreQuiz = LogicScoreQuiz();
 
-LogicClassicQuestionWithImageQuiz classicQuestionWithImageQuiz =
-    LogicClassicQuestionWithImageQuiz();
-
-class QuizzlerWithImage extends StatelessWidget {
+class ClassicQuestionWithImagePage extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.grey.shade900,
-      body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10.0),
-          child: QuizWithImagePage(),
-        ),
-      ),
-    );
-  }
+  _ClassicQuestionWithImagePageState createState() =>
+      _ClassicQuestionWithImagePageState();
 }
 
-class QuizWithImagePage extends StatefulWidget {
-  @override
-  _QuizWithImagePageState createState() => _QuizWithImagePageState();
-}
-
-class _QuizWithImagePageState extends State<QuizWithImagePage> {
-  bool status = false;
-  bool statusRight = false;
-  bool resetTime = false;
+class _ClassicQuestionWithImagePageState
+    extends State<ClassicQuestionWithImagePage> {
+  final controller = Level2Controller();
 
   int _counter = 0;
   late Timer _timer;
-  int finalScore = 0;
+  int _questionNumber = 0;
+
+  bool status = true;
+  bool statusRight = false;
+  bool resetTime = false;
 
   void _startTimer() {
-    _counter = classicQuestionWithImageQuiz.getCounter();
+    _counter = 30;
     _timer = Timer.periodic(Duration(seconds: 1), (timer) {
       if (_counter > 0) {
         setState(() {
           _counter--;
         });
       } else {
-        if (classicQuestionWithImageQuiz.isFinished() == false) {
-          _timer.cancel();
-          Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => TimeIsUp(
-                    score: logicScoreQuiz.totalScore(),
-                    time: timer,
-                  )));
-        }
-        _timer.cancel();
-      }
-    });
-  }
-
-  void checkAnswer(bool userPickedAnswer) {
-    bool correctAnswer = classicQuestionWithImageQuiz.getCorrectAnswer();
-
-    setState(() {
-      if (classicQuestionWithImageQuiz.isFinished() == true) {
-        logicScoreQuiz.incrementScore(logicScoreQuiz.calculationScore(
-            classicQuestionWithImageQuiz.getPointRight(), _counter));
-
         Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => CongratulationsNivel2(
-                score: logicScoreQuiz.totalScore().toString(), time: _timer)));
+            builder: (context) =>
+                TimeIsUp(score: logicScoreQuiz.totalScore(), time: _timer)));
 
         _timer.cancel();
-        classicQuestionWithImageQuiz.reset();
-      } else {
-        if (userPickedAnswer == correctAnswer) {
-          if (classicQuestionQuiz.secondQuestion()) {
-            setState(() {
-              status = false;
-            });
-          }
-          _timer.cancel();
-          logicScoreQuiz.incrementScore(logicScoreQuiz.calculationScore(
-              classicQuestionWithImageQuiz.getPointRight(), _counter));
-        } else {
-          _timer.cancel();
-          Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) =>
-                  GameOver(score: logicScoreQuiz.totalScore(), time: _timer)));
-        }
-
-        _timer.cancel();
-        _startTimer();
-        classicQuestionWithImageQuiz.nextQuestion();
-      }
-    });
-  }
-
-  void nextQuestion() {
-    setState(() {
-      if (classicQuestionWithImageQuiz.isFinished() == true) {
-        Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => CongratulationsNivel2(
-                score: logicScoreQuiz.totalScore().toString(), time: _timer)));
-
-        classicQuestionWithImageQuiz.reset();
-      } else {
-        _timer.cancel();
-        _startTimer();
-        classicQuestionWithImageQuiz.nextQuestion();
       }
     });
   }
 
   @override
   void initState() {
-    _startTimer();
     super.initState();
+    controller.startLevel2();
+    _startTimer();
   }
 
-  @override
-  Widget build(BuildContext context) {
+  _success() {
+    List<ClassicQuestionWithImage> _classicQuestionWithImage =
+        controller.classicQuestionWithImage;
+
+    bool secondQuestion() {
+      if (_questionNumber == 1) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+
+    bool getCorrectAnswer() {
+      return _classicQuestionWithImage[_questionNumber].questionAnswer;
+    }
+
+    int getPointSkip() {
+      return _classicQuestionWithImage[_questionNumber].skipPoint;
+    }
+
+    int getPointStop() {
+      return _classicQuestionWithImage[_questionNumber].stopPoint;
+    }
+
+    int getPointRight() {
+      return _classicQuestionWithImage[_questionNumber].rightPoint;
+    }
+
+    bool isFinished() {
+      if (_questionNumber >= _classicQuestionWithImage.length - 1) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+
+    void reset() {
+      _questionNumber = 0;
+    }
+
+    void disableButtonSkip() {
+      setState(() {
+        status = true;
+      });
+    }
+
+    Image getImage() {
+      String url = _classicQuestionWithImage[_questionNumber].image;
+      Image image = Image.network(url);
+      return image;
+    }
+
+    void nextQuestion() {
+      if (_questionNumber < _classicQuestionWithImage.length - 1) {
+        print(_classicQuestionWithImage.length);
+        _questionNumber++;
+      }
+    }
+
+    void checkAnswer(bool userPickedAnswer) {
+      bool correctAnswer = getCorrectAnswer();
+
+      setState(() {
+        if (isFinished() == true) {
+          logicScoreQuiz.incrementScore(
+              logicScoreQuiz.calculationScore(getPointRight(), _counter));
+
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => CongratulationsNivel2(
+                  score: logicScoreQuiz.totalScore().toString(),
+                  time: _timer)));
+
+          _timer.cancel();
+          reset();
+        } else {
+          if (userPickedAnswer == correctAnswer) {
+            if (secondQuestion()) {
+              setState(() {
+                status = false;
+              });
+            }
+            _timer.cancel();
+            logicScoreQuiz.incrementScore(
+                logicScoreQuiz.calculationScore(getPointRight(), _counter));
+          } else {
+            _timer.cancel();
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => GameOver(
+                    score: logicScoreQuiz.totalScore(), time: _timer)));
+          }
+
+          _timer.cancel();
+          _startTimer();
+          nextQuestion();
+        }
+      });
+    }
+
+    void whatToDoOnPressedSkip({required Timer time}) {
+      time.cancel();
+      logicScoreQuiz.decreaseScore(getPointSkip());
+      disableButtonSkip();
+      nextQuestion();
+    }
+
+    void whatToDoOnPressedRight({required Timer time}) {
+      time.cancel();
+      logicScoreQuiz.incrementScore(
+          logicScoreQuiz.calculationScore(getPointRight(), _counter));
+      setState(() {
+        statusRight = true;
+      });
+      nextQuestion();
+    }
+
     return Container(
       decoration: BoxDecoration(
         image: DecorationImage(
@@ -138,7 +181,19 @@ class _QuizWithImagePageState extends State<QuizWithImagePage> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           CounterPoints(points: logicScoreQuiz.totalScore().toString()),
-          QuestionImage(),
+          Expanded(
+            flex: 5,
+            child: Padding(
+              padding: EdgeInsets.all(10.0),
+              child: Container(
+                decoration: new BoxDecoration(
+                  borderRadius: new BorderRadius.circular(16.0),
+                  color: Colors.blueGrey,
+                ),
+                child: getImage(),
+              ),
+            ),
+          ),
           Expanded(
             flex: 1,
             child: SafeArea(
@@ -246,11 +301,7 @@ class _QuizWithImagePageState extends State<QuizWithImagePage> {
                       ),
                     ),
                     child: Text(
-                      '-' +
-                          classicQuestionWithImageQuiz
-                              .getPointSkip()
-                              .toString() +
-                          '\nPULAR',
+                      '-' + getPointSkip().toString() + '\nPULAR',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 20.0,
@@ -261,9 +312,7 @@ class _QuizWithImagePageState extends State<QuizWithImagePage> {
                         ? null
                         : () => whatToDoOnPressedSkip(time: _timer),
                   ),
-                  StopQuestion(
-                      pointsStop: classicQuestionWithImageQuiz.getPointStop(),
-                      time: _timer),
+                  StopQuestion(pointsStop: getPointStop(), time: _timer),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       primary: Colors.white,
@@ -273,8 +322,7 @@ class _QuizWithImagePageState extends State<QuizWithImagePage> {
                       ),
                     ),
                     child: Text(
-                      classicQuestionWithImageQuiz.getPointRight().toString() +
-                          '\nACERTAR',
+                      getPointRight().toString() + '\nACERTAR',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 20.0,
@@ -294,22 +342,43 @@ class _QuizWithImagePageState extends State<QuizWithImagePage> {
     );
   }
 
-  void whatToDoOnPressedSkip({required Timer time}) {
-    time.cancel();
-    logicScoreQuiz.decreaseScore(classicQuestionWithImageQuiz.getPointSkip());
-    setState(() {
-      status = true;
-    });
-    nextQuestion();
+  _error() {
+    return Center(
+        child: RaisedButton(onPressed: () {}, child: Text('Tentar novamente')));
   }
 
-  void whatToDoOnPressedRight({required Timer time}) {
-    time.cancel();
-    logicScoreQuiz.incrementScore(logicScoreQuiz.calculationScore(
-        classicQuestionWithImageQuiz.getPointRight(), _counter));
-    setState(() {
-      statusRight = true;
-    });
-    nextQuestion();
+  _start() {
+    return Center(child: CircularProgressIndicator());
+  }
+
+  _loading() {
+    return Center(child: CircularProgressIndicator());
+  }
+
+  stateManagement(Level2State state) {
+    switch (state) {
+      case Level2State.start:
+        return _start();
+      case Level2State.loading:
+        return _loading();
+      case Level2State.success:
+        return _success();
+      case Level2State.error:
+        return _error();
+      default:
+        return _start();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: AnimatedBuilder(
+        animation: controller.state,
+        builder: (context, child) {
+          return stateManagement(controller.state.value);
+        },
+      ),
+    );
   }
 }

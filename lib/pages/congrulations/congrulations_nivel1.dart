@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'package:quiz_fake_news/pages/classic_with_image_quizzler.dart';
+import 'package:quiz_fake_news/pages/levels/classic_question_with_image_quizzler.dart';
 import 'package:quiz_fake_news/widgets/middle_congrulations.dart';
 
 class CongratulationsNivel1 extends StatelessWidget {
@@ -80,7 +80,7 @@ class StartAgain extends StatelessWidget {
   void _navigateToNextScreen(BuildContext context) {
     time.cancel();
 
-    Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => QuizzlerWithImage()));
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => ClassicQuestionWithImagePage()));
   }
 }
