@@ -6,6 +6,7 @@ import 'package:quiz_fake_news/logic/score.dart';
 import 'package:quiz_fake_news/models/types_questions/multiple_alternatives.dart';
 import 'package:quiz_fake_news/pages/congrulations/congrulations_final.dart';
 import 'package:quiz_fake_news/pages/game_over.dart';
+import 'package:quiz_fake_news/pages/loading.dart';
 import 'package:quiz_fake_news/pages/time_is_up.dart';
 import 'package:quiz_fake_news/widgets/counter_time.dart';
 import 'package:quiz_fake_news/widgets/question_description.dart';
@@ -182,7 +183,7 @@ class _MultipleAlternativesPageState extends State<MultipleAlternativesPage> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           CounterPoints(points: logicScoreQuiz.totalScore().toString()),
-          QuestionDescription(description: getQuestionDescription(), size: 5),
+          QuestionDescription(description: getQuestionDescription(), size: 3),
           Expanded(
             flex: 1,
             child: Padding(
@@ -201,7 +202,7 @@ class _MultipleAlternativesPageState extends State<MultipleAlternativesPage> {
                       style: TextStyle(
                         color: Colors.black,
                         fontFamily: 'NunitoSemibold',
-                        fontSize: 14.0,
+                        fontSize: 16.0,
                       ),
                     ),
                   ),
@@ -227,7 +228,7 @@ class _MultipleAlternativesPageState extends State<MultipleAlternativesPage> {
                       style: TextStyle(
                         color: Colors.black,
                         fontFamily: 'NunitoSemibold',
-                        fontSize: 14.0,
+                        fontSize: 16.0,
                       ),
                     ),
                   ),
@@ -253,7 +254,7 @@ class _MultipleAlternativesPageState extends State<MultipleAlternativesPage> {
                       style: TextStyle(
                         color: Colors.black,
                         fontFamily: 'NunitoSemibold',
-                        fontSize: 14.0,
+                        fontSize: 16.0,
                       ),
                     ),
                   ),
@@ -279,7 +280,7 @@ class _MultipleAlternativesPageState extends State<MultipleAlternativesPage> {
                       style: TextStyle(
                         color: Colors.black,
                         fontFamily: 'NunitoSemibold',
-                        fontSize: 14.0,
+                        fontSize: 16.0,
                       ),
                     ),
                   ),
@@ -300,9 +301,9 @@ class _MultipleAlternativesPageState extends State<MultipleAlternativesPage> {
                       style: TextStyle(
                           color: Colors.black,
                           fontFamily: 'Medium',
-                          fontSize: 20),
+                          fontSize: 22),
                     ),
-                    radius: 20.0,
+                    radius: 22.0,
                   ),
                 ],
               ),
@@ -374,26 +375,20 @@ class _MultipleAlternativesPageState extends State<MultipleAlternativesPage> {
         child: RaisedButton(onPressed: () {}, child: Text('Tentar novamente')));
   }
 
-  _start() {
-    return Center(child: CircularProgressIndicator());
-  }
-
-  _loading() {
-    return Center(child: CircularProgressIndicator());
-  }
-
   stateManagement(Level3State state) {
+    Loading commonActions = Loading();
+
     switch (state) {
       case Level3State.start:
-        return _start();
+        return commonActions.start();
       case Level3State.loading:
-        return _loading();
+        return commonActions.loading();
       case Level3State.success:
         return _success();
       case Level3State.error:
         return _error();
       default:
-        return _start();
+        return commonActions.start();
     }
   }
 

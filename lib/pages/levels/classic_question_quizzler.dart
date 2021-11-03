@@ -5,6 +5,7 @@ import 'package:quiz_fake_news/controller/level1_controller.dart';
 import 'package:quiz_fake_news/logic/score.dart';
 import 'package:quiz_fake_news/models/types_questions/classic_question.dart';
 import 'package:quiz_fake_news/pages/game_over.dart';
+import 'package:quiz_fake_news/pages/loading.dart';
 import 'package:quiz_fake_news/pages/time_is_up.dart';
 import 'package:quiz_fake_news/widgets/counter_time.dart';
 import 'package:quiz_fake_news/widgets/question_description.dart';
@@ -336,26 +337,20 @@ class _PageHomeState extends State<PageHome> {
         child: RaisedButton(onPressed: () {}, child: Text('Tentar novamente')));
   }
 
-  _start() {
-    return Center(child: CircularProgressIndicator());
-  }
-
-  _loading() {
-    return Center(child: CircularProgressIndicator());
-  }
-
   stateManagement(Level1State state) {
+    Loading commonActions = Loading();
+
     switch (state) {
       case Level1State.start:
-        return _start();
+        return commonActions.start();
       case Level1State.loading:
-        return _loading();
+        return commonActions.loading();
       case Level1State.success:
         return _success();
       case Level1State.error:
         return _error();
       default:
-        return _start();
+        return commonActions.start();
     }
   }
 

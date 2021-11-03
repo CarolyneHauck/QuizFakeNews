@@ -6,6 +6,7 @@ import 'package:quiz_fake_news/logic/score.dart';
 import 'package:quiz_fake_news/models/types_questions/classic_with_image.dart';
 import 'package:quiz_fake_news/pages/congrulations/congrulations_nivel2.dart';
 import 'package:quiz_fake_news/pages/game_over.dart';
+import 'package:quiz_fake_news/pages/loading.dart';
 import 'package:quiz_fake_news/pages/time_is_up.dart';
 import 'package:quiz_fake_news/widgets/counter_time.dart';
 import 'package:quiz_fake_news/widgets/stop_question.dart';
@@ -347,26 +348,20 @@ class _ClassicQuestionWithImagePageState
         child: RaisedButton(onPressed: () {}, child: Text('Tentar novamente')));
   }
 
-  _start() {
-    return Center(child: CircularProgressIndicator());
-  }
-
-  _loading() {
-    return Center(child: CircularProgressIndicator());
-  }
-
   stateManagement(Level2State state) {
+    Loading commonActions = Loading();
+
     switch (state) {
       case Level2State.start:
-        return _start();
+        return commonActions.start();
       case Level2State.loading:
-        return _loading();
+        return commonActions.loading();
       case Level2State.success:
         return _success();
       case Level2State.error:
         return _error();
       default:
-        return _start();
+        return commonActions.start();
     }
   }
 
