@@ -186,6 +186,27 @@ class _MultipleAlternativesPageState extends State<MultipleAlternativesPage> {
           QuestionDescription(description: getQuestionDescription(), size: 3),
           Expanded(
             flex: 1,
+            child: SafeArea(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  CircleAvatar(
+                    backgroundColor: Colors.grey,
+                    child: Text(
+                      '$_counter',
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontFamily: 'Medium',
+                          fontSize: 22),
+                    ),
+                    radius: 22.0,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 1,
             child: Padding(
               padding: EdgeInsets.all(15.0),
               child: SizedBox(
@@ -285,27 +306,6 @@ class _MultipleAlternativesPageState extends State<MultipleAlternativesPage> {
                     ),
                   ),
                 ),
-              ),
-            ),
-          ),
-          Expanded(
-            flex: 1,
-            child: SafeArea(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  CircleAvatar(
-                    backgroundColor: Colors.grey,
-                    child: Text(
-                      '$_counter',
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontFamily: 'Medium',
-                          fontSize: 22),
-                    ),
-                    radius: 22.0,
-                  ),
-                ],
               ),
             ),
           ),

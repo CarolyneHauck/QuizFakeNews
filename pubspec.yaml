@@ -39,6 +39,8 @@ flutter:
     - animations/timesup.json
     - animations/confetti.json
     - animations/levelup.json
+    - animations/loading.json
+    - animations/error.json
     - animations/congratulations.json
     - animations/login.json
     - animations/news.json
