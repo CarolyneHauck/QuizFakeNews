@@ -5,7 +5,7 @@ import 'package:quiz_fake_news/controller/level1_controller.dart';
 import 'package:quiz_fake_news/logic/score.dart';
 import 'package:quiz_fake_news/models/types_questions/classic_question.dart';
 import 'package:quiz_fake_news/pages/game_over.dart';
-import 'package:quiz_fake_news/pages/loading.dart';
+import 'package:quiz_fake_news/pages/common_actions.dart';
 import 'package:quiz_fake_news/pages/time_is_up.dart';
 import 'package:quiz_fake_news/widgets/counter_time.dart';
 import 'package:quiz_fake_news/widgets/question_description.dart';
@@ -30,6 +30,7 @@ class _PageHomeState extends State<PageHome> {
   bool status = true;
   bool statusRight = false;
   bool resetTime = false;
+  int totalScoreLevel1 = 0;
 
   void _startTimer() {
     _counter = 30;
@@ -39,6 +40,8 @@ class _PageHomeState extends State<PageHome> {
           _counter--;
         });
       } else {
+        totalScoreLevel1 = logicScoreQuiz.totalScore();
+        logicScoreQuiz.resetScore();
         Navigator.of(context).push(MaterialPageRoute(
             builder: (context) =>
                 TimeIsUp(score: logicScoreQuiz.totalScore(), time: _timer)));
@@ -51,6 +54,7 @@ class _PageHomeState extends State<PageHome> {
   @override
   void initState() {
     super.initState();
+    logicScoreQuiz.resetScore();
     controller.start();
     _startTimer();
   }
@@ -126,13 +130,23 @@ class _PageHomeState extends State<PageHome> {
 
       setState(() {
         if (isFinished() == true) {
-          Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => CongratulationsNivel1(
-                  score: logicScoreQuiz.totalScore().toString(),
-                  time: _timer)));
+          if (userPickedAnswer != correctAnswer) {
+            _timer.cancel();
+            totalScoreLevel1 = logicScoreQuiz.totalScore();
+            logicScoreQuiz.resetScore();
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) =>
+                    GameOver(score: totalScoreLevel1, time: _timer)));
+          } else {
+            totalScoreLevel1 = logicScoreQuiz.totalScore();
+            logicScoreQuiz.resetScore();
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => CongratulationsNivel1(
+                    score: totalScoreLevel1.toString(), time: _timer)));
 
-          _timer.cancel();
-          reset();
+            _timer.cancel();
+            reset();
+          }
         } else {
           if (userPickedAnswer == correctAnswer) {
             if (secondQuestion()) {
@@ -143,9 +157,11 @@ class _PageHomeState extends State<PageHome> {
                 logicScoreQuiz.calculationScore(getPointAnswer(), _counter));
           } else {
             _timer.cancel();
+            totalScoreLevel1 = logicScoreQuiz.totalScore();
+            logicScoreQuiz.resetScore();
             Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => GameOver(
-                    score: logicScoreQuiz.totalScore(), time: _timer)));
+                builder: (context) =>
+                    GameOver(score: totalScoreLevel1, time: _timer)));
           }
           _timer.cancel();
           _startTimer();
@@ -332,11 +348,6 @@ class _PageHomeState extends State<PageHome> {
     );
   }
 
-  _error() {
-    return Center(
-        child: RaisedButton(onPressed: () {}, child: Text('Tentar novamente')));
-  }
-
   stateManagement(Level1State state) {
     Loading commonActions = Loading();
 
@@ -348,7 +359,7 @@ class _PageHomeState extends State<PageHome> {
       case Level1State.success:
         return _success();
       case Level1State.error:
-        return _error();
+        return commonActions.error();
       default:
         return commonActions.start();
     }

@@ -78,7 +78,7 @@ class StartAgain extends StatelessWidget {
 
   void _navigateToNextScreen(BuildContext context) {
     time.cancel();
-
+    logicScoreQuiz.resetScore();
     Navigator.of(context)
         .push(MaterialPageRoute(builder: (context) => Start()));
   }

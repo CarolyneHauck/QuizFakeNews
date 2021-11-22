@@ -6,7 +6,7 @@ import 'package:quiz_fake_news/logic/score.dart';
 import 'package:quiz_fake_news/models/types_questions/classic_with_image.dart';
 import 'package:quiz_fake_news/pages/congrulations/congrulations_nivel2.dart';
 import 'package:quiz_fake_news/pages/game_over.dart';
-import 'package:quiz_fake_news/pages/loading.dart';
+import 'package:quiz_fake_news/pages/common_actions.dart';
 import 'package:quiz_fake_news/pages/time_is_up.dart';
 import 'package:quiz_fake_news/widgets/counter_time.dart';
 import 'package:quiz_fake_news/widgets/stop_question.dart';
@@ -30,6 +30,7 @@ class _ClassicQuestionWithImagePageState
   bool status = true;
   bool statusRight = false;
   bool resetTime = false;
+  int totalScoreLevel2 = 0;
 
   void _startTimer() {
     _counter = 30;
@@ -39,6 +40,8 @@ class _ClassicQuestionWithImagePageState
           _counter--;
         });
       } else {
+        totalScoreLevel2 = logicScoreQuiz.totalScore();
+        logicScoreQuiz.resetScore();
         Navigator.of(context).push(MaterialPageRoute(
             builder: (context) =>
                 TimeIsUp(score: logicScoreQuiz.totalScore(), time: _timer)));
@@ -51,6 +54,7 @@ class _ClassicQuestionWithImagePageState
   @override
   void initState() {
     super.initState();
+    logicScoreQuiz.resetScore();
     controller.startLevel2();
     _startTimer();
   }
@@ -119,13 +123,22 @@ class _ClassicQuestionWithImagePageState
 
       setState(() {
         if (isFinished() == true) {
+          if (userPickedAnswer != correctAnswer) {
+            _timer.cancel();
+            totalScoreLevel2 = logicScoreQuiz.totalScore();
+            logicScoreQuiz.resetScore();
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) =>
+                    GameOver(score: totalScoreLevel2, time: _timer)));
+          }
+          totalScoreLevel2 = logicScoreQuiz.totalScore();
+          logicScoreQuiz.resetScore();
           logicScoreQuiz.incrementScore(
               logicScoreQuiz.calculationScore(getPointRight(), _counter));
 
           Navigator.of(context).push(MaterialPageRoute(
               builder: (context) => CongratulationsNivel2(
-                  score: logicScoreQuiz.totalScore().toString(),
-                  time: _timer)));
+                  score: totalScoreLevel2.toString(), time: _timer)));
 
           _timer.cancel();
           reset();
@@ -141,6 +154,8 @@ class _ClassicQuestionWithImagePageState
                 logicScoreQuiz.calculationScore(getPointRight(), _counter));
           } else {
             _timer.cancel();
+            totalScoreLevel2 = logicScoreQuiz.totalScore();
+            logicScoreQuiz.resetScore();
             Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) => GameOver(
                     score: logicScoreQuiz.totalScore(), time: _timer)));
@@ -343,11 +358,6 @@ class _ClassicQuestionWithImagePageState
     );
   }
 
-  _error() {
-    return Center(
-        child: RaisedButton(onPressed: () {}, child: Text('Tentar novamente')));
-  }
-
   stateManagement(Level2State state) {
     Loading commonActions = Loading();
 
@@ -359,7 +369,7 @@ class _ClassicQuestionWithImagePageState
       case Level2State.success:
         return _success();
       case Level2State.error:
-        return _error();
+        return commonActions.error();
       default:
         return commonActions.start();
     }

@@ -6,7 +6,7 @@ import 'package:quiz_fake_news/logic/score.dart';
 import 'package:quiz_fake_news/models/types_questions/multiple_alternatives.dart';
 import 'package:quiz_fake_news/pages/congrulations/congrulations_final.dart';
 import 'package:quiz_fake_news/pages/game_over.dart';
-import 'package:quiz_fake_news/pages/loading.dart';
+import 'package:quiz_fake_news/pages/common_actions.dart';
 import 'package:quiz_fake_news/pages/time_is_up.dart';
 import 'package:quiz_fake_news/widgets/counter_time.dart';
 import 'package:quiz_fake_news/widgets/question_description.dart';
@@ -30,6 +30,7 @@ class _MultipleAlternativesPageState extends State<MultipleAlternativesPage> {
   bool status = true;
   bool statusRight = false;
   bool resetTime = false;
+  int totalScoreLevel3 = 0;
 
   void _startTimer() {
     _counter = 30;
@@ -39,6 +40,8 @@ class _MultipleAlternativesPageState extends State<MultipleAlternativesPage> {
           _counter--;
         });
       } else {
+        totalScoreLevel3 = logicScoreQuiz.totalScore();
+        logicScoreQuiz.resetScore();
         Navigator.of(context).push(MaterialPageRoute(
             builder: (context) =>
                 TimeIsUp(score: logicScoreQuiz.totalScore(), time: _timer)));
@@ -51,6 +54,7 @@ class _MultipleAlternativesPageState extends State<MultipleAlternativesPage> {
   @override
   void initState() {
     super.initState();
+    logicScoreQuiz.resetScore();
     controller.startLevel3();
     _startTimer();
   }
@@ -125,13 +129,15 @@ class _MultipleAlternativesPageState extends State<MultipleAlternativesPage> {
 
       setState(() {
         if (isFinished() == true) {
+          totalScoreLevel3 = logicScoreQuiz.totalScore();
+          logicScoreQuiz.resetScore();
+
           logicScoreQuiz.incrementScore(
               logicScoreQuiz.calculationScore(getPointRight(), _counter));
 
           Navigator.of(context).push(MaterialPageRoute(
               builder: (context) => Congratulations(
-                  score: logicScoreQuiz.totalScore().toString(),
-                  time: _timer)));
+                  score: totalScoreLevel3.toString(), time: _timer)));
 
           _timer.cancel();
           reset();
@@ -142,6 +148,8 @@ class _MultipleAlternativesPageState extends State<MultipleAlternativesPage> {
                 logicScoreQuiz.calculationScore(getPointRight(), _counter));
           } else {
             _timer.cancel();
+            totalScoreLevel3 = logicScoreQuiz.totalScore();
+            logicScoreQuiz.resetScore();
             Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) => GameOver(
                     score: logicScoreQuiz.totalScore(), time: _timer)));
@@ -370,11 +378,6 @@ class _MultipleAlternativesPageState extends State<MultipleAlternativesPage> {
     );
   }
 
-  _error() {
-    return Center(
-        child: RaisedButton(onPressed: () {}, child: Text('Tentar novamente')));
-  }
-
   stateManagement(Level3State state) {
     Loading commonActions = Loading();
 
@@ -386,7 +389,7 @@ class _MultipleAlternativesPageState extends State<MultipleAlternativesPage> {
       case Level3State.success:
         return _success();
       case Level3State.error:
-        return _error();
+        return commonActions.error();
       default:
         return commonActions.start();
     }

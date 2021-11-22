@@ -22,7 +22,7 @@ class Loading {
     );
   }
 
-  _error() {
+  error() {
     return Container(
       decoration: BoxDecoration(
         image: DecorationImage(

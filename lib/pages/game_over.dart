@@ -78,7 +78,6 @@ class StartAgain extends StatelessWidget {
 
   void _navigateToNextScreen(BuildContext context) {
     time.cancel();
-
     Navigator.of(context)
         .push(MaterialPageRoute(builder: (context) => Start()));
   }

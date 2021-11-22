@@ -8,7 +8,6 @@ import '../start_game.dart';
 
 class Congratulations extends StatelessWidget {
   final String score;
-
   final Timer time;
 
   Congratulations({required this.score, required this.time});
@@ -82,7 +81,7 @@ class StartAgain extends StatelessWidget {
 
   void _navigateToNextScreen(BuildContext context) {
     time.cancel();
-
+    logicScoreQuiz.resetScore();
     Navigator.of(context)
         .push(MaterialPageRoute(builder: (context) => Start()));
   }
