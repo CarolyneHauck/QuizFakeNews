@@ -70,7 +70,7 @@ class _PageHomeState extends State<PageHome> {
     }
 
     bool secondQuestion() {
-      if (_questionNumber == 1) {
+      if (_questionNumber == 0) {
         return true;
       } else {
         return false;

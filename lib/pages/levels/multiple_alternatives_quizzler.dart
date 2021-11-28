@@ -124,6 +124,14 @@ class _MultipleAlternativesPageState extends State<MultipleAlternativesPage> {
       });
     }
 
+    bool secondQuestion() {
+      if (_questionNumber == 0) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+
     void checkAnswerWithMultipleAlternatives(String userPickedAnswer) {
       String correctAnswer = getQuestionAnswer();
 
@@ -143,6 +151,11 @@ class _MultipleAlternativesPageState extends State<MultipleAlternativesPage> {
           reset();
         } else {
           if (userPickedAnswer == correctAnswer) {
+            if (secondQuestion()) {
+              setState(() {
+                status = false;
+              });
+            }
             _timer.cancel();
             logicScoreQuiz.incrementScore(
                 logicScoreQuiz.calculationScore(getPointRight(), _counter));
