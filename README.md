@@ -1,6 +1,7 @@
 # quiz_fake_news
 
 A new Flutter project.
+https://docs.google.com/document/d/1mLcQEZRiY4CEXM69gCSG7qZR4d6D5-kRvIdoZvmHDQA/edit
 
 ## Getting Started
 
