@@ -5,8 +5,8 @@ import 'package:quiz_fake_news/controller/level2_controller.dart';
 import 'package:quiz_fake_news/logic/score.dart';
 import 'package:quiz_fake_news/models/types_questions/classic_with_image.dart';
 import 'package:quiz_fake_news/pages/congrulations/congrulations_nivel2.dart';
-import 'package:quiz_fake_news/pages/game_over.dart';
 import 'package:quiz_fake_news/pages/common_actions.dart';
+import 'package:quiz_fake_news/pages/gameover/game_over_level2.dart';
 import 'package:quiz_fake_news/pages/time_is_up.dart';
 import 'package:quiz_fake_news/widgets/counter_time.dart';
 import 'package:quiz_fake_news/widgets/stop_question.dart';
@@ -120,16 +120,31 @@ class _ClassicQuestionWithImagePageState
 
     void checkAnswer(bool userPickedAnswer) {
       bool correctAnswer = getCorrectAnswer();
+      Image question = getImage();
+      String answerCorrect = "Notícia Verdadeira";
+      String answerIncorrect = "Notícia Falsa";
 
       setState(() {
         if (isFinished() == true) {
+          _timer.cancel();
           if (userPickedAnswer != correctAnswer) {
-            _timer.cancel();
-            totalScoreLevel2 = logicScoreQuiz.totalScore();
-            logicScoreQuiz.resetScore();
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) =>
-                    GameOver(score: totalScoreLevel2, time: _timer)));
+            if (correctAnswer == true) {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => GameOverLevel2(
+                        score: totalScoreLevel2,
+                        time: _timer,
+                        rightAnswer: answerCorrect,
+                        question: question,
+                      )));
+            } else {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => GameOverLevel2(
+                        score: totalScoreLevel2,
+                        time: _timer,
+                        rightAnswer: answerIncorrect,
+                        question: question,
+                      )));
+            }
           }
           totalScoreLevel2 = logicScoreQuiz.totalScore();
           logicScoreQuiz.resetScore();
@@ -156,9 +171,25 @@ class _ClassicQuestionWithImagePageState
             _timer.cancel();
             totalScoreLevel2 = logicScoreQuiz.totalScore();
             logicScoreQuiz.resetScore();
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => GameOver(
-                    score: logicScoreQuiz.totalScore(), time: _timer)));
+            if (userPickedAnswer != correctAnswer) {
+              if (correctAnswer == true) {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => GameOverLevel2(
+                          score: totalScoreLevel2,
+                          time: _timer,
+                          rightAnswer: answerCorrect,
+                          question: question,
+                        )));
+              } else {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => GameOverLevel2(
+                          score: totalScoreLevel2,
+                          time: _timer,
+                          rightAnswer: answerIncorrect,
+                          question: question,
+                        )));
+              }
+            }
           }
 
           _timer.cancel();

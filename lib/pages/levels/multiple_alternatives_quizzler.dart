@@ -5,8 +5,8 @@ import 'package:quiz_fake_news/controller/level3_controller.dart';
 import 'package:quiz_fake_news/logic/score.dart';
 import 'package:quiz_fake_news/models/types_questions/multiple_alternatives.dart';
 import 'package:quiz_fake_news/pages/congrulations/congrulations_final.dart';
-import 'package:quiz_fake_news/pages/game_over.dart';
 import 'package:quiz_fake_news/pages/common_actions.dart';
+import 'package:quiz_fake_news/pages/gameover/game_over_level3.dart';
 import 'package:quiz_fake_news/pages/time_is_up.dart';
 import 'package:quiz_fake_news/widgets/counter_time.dart';
 import 'package:quiz_fake_news/widgets/question_description.dart';
@@ -134,6 +134,7 @@ class _MultipleAlternativesPageState extends State<MultipleAlternativesPage> {
 
     void checkAnswerWithMultipleAlternatives(String userPickedAnswer) {
       String correctAnswer = getQuestionAnswer();
+      String question = getQuestionDescription();
 
       setState(() {
         if (isFinished() == true) {
@@ -162,12 +163,16 @@ class _MultipleAlternativesPageState extends State<MultipleAlternativesPage> {
           } else {
             _timer.cancel();
             totalScoreLevel3 = logicScoreQuiz.totalScore();
-            logicScoreQuiz.resetScore();
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => GameOver(
-                    score: logicScoreQuiz.totalScore(), time: _timer)));
-          }
 
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => GameOverLevel3(
+                      score: logicScoreQuiz.totalScore(),
+                      time: _timer,
+                      question: question,
+                      rightAnswer: correctAnswer,
+                    )));
+          }
+          logicScoreQuiz.resetScore();
           _timer.cancel();
           _startTimer();
           nextQuestion();

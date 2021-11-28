@@ -12,7 +12,6 @@ import 'package:quiz_fake_news/widgets/question_description.dart';
 import 'package:quiz_fake_news/widgets/stop_question.dart';
 
 import '../congrulations/congrulations_nivel1.dart';
-import '../game_over.dart';
 
 LogicScoreQuiz logicScoreQuiz = LogicScoreQuiz();
 
@@ -136,7 +135,6 @@ class _PageHomeState extends State<PageHome> {
         if (isFinished() == true) {
           _timer.cancel();
           totalScoreLevel1 = logicScoreQuiz.totalScore();
-          logicScoreQuiz.resetScore();
           if (userPickedAnswer != correctAnswer) {
             if (correctAnswer == true) {
               Navigator.of(context).push(MaterialPageRoute(
@@ -155,6 +153,7 @@ class _PageHomeState extends State<PageHome> {
                         question: question,
                       )));
             }
+            logicScoreQuiz.resetScore();
           } else {
             totalScoreLevel1 = logicScoreQuiz.totalScore();
             logicScoreQuiz.resetScore();
