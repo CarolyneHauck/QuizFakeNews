@@ -193,7 +193,6 @@ class _PageHomeState extends State<PageHome> {
                         question: question,
                       )));
             }
-            ;
           }
           _timer.cancel();
           _startTimer();

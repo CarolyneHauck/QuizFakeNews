@@ -166,13 +166,14 @@ class _MultipleAlternativesPageState extends State<MultipleAlternativesPage> {
 
             Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) => GameOverLevel3(
-                      score: logicScoreQuiz.totalScore(),
+                      score: totalScoreLevel3,
                       time: _timer,
                       question: question,
                       rightAnswer: correctAnswer,
                     )));
+
+            logicScoreQuiz.resetScore();
           }
-          logicScoreQuiz.resetScore();
           _timer.cancel();
           _startTimer();
           nextQuestion();
