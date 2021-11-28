@@ -4,14 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:quiz_fake_news/controller/level1_controller.dart';
 import 'package:quiz_fake_news/logic/score.dart';
 import 'package:quiz_fake_news/models/types_questions/classic_question.dart';
-import 'package:quiz_fake_news/pages/game_over.dart';
 import 'package:quiz_fake_news/pages/common_actions.dart';
+import 'package:quiz_fake_news/pages/gameover/game_over_level1.dart';
 import 'package:quiz_fake_news/pages/time_is_up.dart';
 import 'package:quiz_fake_news/widgets/counter_time.dart';
 import 'package:quiz_fake_news/widgets/question_description.dart';
 import 'package:quiz_fake_news/widgets/stop_question.dart';
 
 import '../congrulations/congrulations_nivel1.dart';
+import '../game_over.dart';
 
 LogicScoreQuiz logicScoreQuiz = LogicScoreQuiz();
 
@@ -127,16 +128,33 @@ class _PageHomeState extends State<PageHome> {
 
     void checkAnswer(bool userPickedAnswer) {
       bool correctAnswer = getCorrectAnswer();
+      String question = getQuestionText();
+      String answerCorrect = "Verdadeiro";
+      String answerIncorrect = "Falso";
 
       setState(() {
         if (isFinished() == true) {
+          _timer.cancel();
+          totalScoreLevel1 = logicScoreQuiz.totalScore();
+          logicScoreQuiz.resetScore();
           if (userPickedAnswer != correctAnswer) {
-            _timer.cancel();
-            totalScoreLevel1 = logicScoreQuiz.totalScore();
-            logicScoreQuiz.resetScore();
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) =>
-                    GameOver(score: totalScoreLevel1, time: _timer)));
+            if (correctAnswer == true) {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => GameOverLevel1(
+                        score: totalScoreLevel1,
+                        time: _timer,
+                        rightAnswer: answerCorrect,
+                        question: question,
+                      )));
+            } else {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => GameOverLevel1(
+                        score: totalScoreLevel1,
+                        time: _timer,
+                        rightAnswer: answerIncorrect,
+                        question: question,
+                      )));
+            }
           } else {
             totalScoreLevel1 = logicScoreQuiz.totalScore();
             logicScoreQuiz.resetScore();
@@ -159,9 +177,24 @@ class _PageHomeState extends State<PageHome> {
             _timer.cancel();
             totalScoreLevel1 = logicScoreQuiz.totalScore();
             logicScoreQuiz.resetScore();
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) =>
-                    GameOver(score: totalScoreLevel1, time: _timer)));
+            if (correctAnswer == true) {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => GameOverLevel1(
+                        score: totalScoreLevel1,
+                        time: _timer,
+                        rightAnswer: answerCorrect,
+                        question: question,
+                      )));
+            } else {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => GameOverLevel1(
+                        score: totalScoreLevel1,
+                        time: _timer,
+                        rightAnswer: answerIncorrect,
+                        question: question,
+                      )));
+            }
+            ;
           }
           _timer.cancel();
           _startTimer();
