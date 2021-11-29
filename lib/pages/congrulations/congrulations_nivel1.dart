@@ -47,13 +47,9 @@ class _CongrulationNivel1State extends State<CongrulationNivel1> {
       ),
       child: Column(
         children: <Widget>[
-          Expanded(
-            flex: 1,
-            child: SizedBox(width: 5.0),
-          ),
           Expanded(flex: 2, child: Lottie.asset("animations/levelup.json")),
           Expanded(
-            flex: 3,
+            flex: 4,
             child: Container(
               decoration: new BoxDecoration(
                 borderRadius: new BorderRadius.circular(16.0),
@@ -62,24 +58,45 @@ class _CongrulationNivel1State extends State<CongrulationNivel1> {
               child: Center(
                 child: Column(
                   children: [
-                    Text(
-                      '\nRANKING\n',
-                      textAlign: TextAlign.center,
+                    Center(
+                        child: Text(
+                      "RANKING",
                       style: TextStyle(
-                        decoration: TextDecoration.none,
                         color: Colors.black,
                         fontFamily: 'Medium',
-                        fontSize: 22.0,
+                        fontSize: 20.0,
                       ),
-                    ),
+                    )),
                     ListView.builder(
-                      itemCount: _rankingLevel1.length,
+                      scrollDirection: Axis.vertical,
+                      shrinkWrap: true,
+                      itemCount: 3,
                       itemBuilder: (context, index) {
-                        return ListTile(
-                            //title: Text(_rankingLevel1[index]),
-                            );
+                        final item = _rankingLevel1[index];
+                        return Center(
+                          child: ListTile(
+                            title: Center(
+                                child: Text(
+                              item.name,
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontFamily: 'Medium',
+                                fontSize: 20.0,
+                              ),
+                            )),
+                            subtitle: Center(
+                                child: Text(
+                              item.points.toString(),
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontFamily: 'Medium',
+                                fontSize: 18.0,
+                              ),
+                            )),
+                          ),
+                        );
                       },
-                    )
+                    ),
                   ],
                 ),
               ),

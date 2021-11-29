@@ -9,7 +9,7 @@ class Middle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      flex: 4,
+      flex: 3,
       child: Container(
         decoration: new BoxDecoration(
           borderRadius: new BorderRadius.circular(16.0),
@@ -27,7 +27,7 @@ class Middle extends StatelessWidget {
                   decoration: TextDecoration.none,
                   color: Colors.black,
                   fontFamily: 'Medium',
-                  fontSize: 24),
+                  fontSize: 20),
             ),
             SizedBox(height: 20.0),
             Material(
