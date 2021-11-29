@@ -12,6 +12,8 @@ class AuthCheck extends StatefulWidget {
 }
 
 class _AuthCheckState extends State<AuthCheck> {
+  String? email = "carolyne@gmail.com";
+
   @override
   Widget build(BuildContext context) {
     AuthService auth = Provider.of<AuthService>(context);
@@ -21,7 +23,8 @@ class _AuthCheckState extends State<AuthCheck> {
     else if (auth.usuario == null)
       return LoginPage();
     else
-      return PageHome();
+      email = auth.usuario!.email;
+    return PageHome(email: email);
   }
 
   loading() {

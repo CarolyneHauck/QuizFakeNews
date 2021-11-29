@@ -112,7 +112,7 @@ class Start extends StatelessWidget {
   }
 
   void _navigateToNextScreen(BuildContext context) {
-    Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => PageHome()));
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => PageHome(email: 'carol@gmail.com')));
   }
 }
