@@ -4,13 +4,13 @@ import 'package:quiz_fake_news/repositories/ranking_repository.dart';
 
 class Ranking1Controller {
   List<Ranking> ranking = [];
-  final repository = Ranking1Repository();
+  final repository = RankingRepository();
   final state = ValueNotifier<Ranking1State>(Ranking1State.start);
 
   Future start() async {
     state.value = Ranking1State.loading;
     try {
-      ranking = await repository.fetchData();
+      ranking = await repository.fetchData('level1');
       state.value = Ranking1State.success;
     } catch (e) {
       state.value = Ranking1State.error;

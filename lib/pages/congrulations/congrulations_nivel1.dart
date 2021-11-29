@@ -9,25 +9,29 @@ import 'package:quiz_fake_news/pages/levels/classic_question_with_image_quizzler
 import 'package:quiz_fake_news/repositories/ranking_repository.dart';
 import 'package:quiz_fake_news/widgets/middle_congrulations.dart';
 
-Ranking1Repository ranking = Ranking1Repository();
+RankingRepository ranking = RankingRepository();
 
 class CongrulationNivel1 extends StatefulWidget {
   final String score;
+  final String? email;
   final Timer time;
 
-  CongrulationNivel1({required this.score, required this.time});
+  CongrulationNivel1(
+      {required this.score, required this.time, required this.email});
 
   @override
   _CongrulationNivel1State createState() =>
-      _CongrulationNivel1State(score: score, time: time);
+      _CongrulationNivel1State(score: score, time: time, email: email);
 }
 
 class _CongrulationNivel1State extends State<CongrulationNivel1> {
   final controller = Ranking1Controller();
   final String score;
+  final String? email;
   final Timer time;
 
-  _CongrulationNivel1State({required this.score, required this.time});
+  _CongrulationNivel1State(
+      {required this.score, required this.time, required this.email});
 
   @override
   void initState() {
@@ -107,7 +111,7 @@ class _CongrulationNivel1State extends State<CongrulationNivel1> {
             child: SizedBox(width: 5.0),
           ),
           Middle(score: score),
-          StartAgain(time: time),
+          StartAgain(time: time, email: email),
         ],
       ),
     );
@@ -145,8 +149,9 @@ class _CongrulationNivel1State extends State<CongrulationNivel1> {
 
 class StartAgain extends StatelessWidget {
   final Timer time;
+  final String? email;
 
-  StartAgain({required this.time});
+  StartAgain({required this.time, required this.email});
 
   @override
   Widget build(BuildContext context) {
@@ -176,7 +181,7 @@ class StartAgain extends StatelessWidget {
               ),
             ),
             onPressed: () {
-              _navigateToNextScreen(context);
+              _navigateToNextScreen(context, email);
             },
             shape: const StadiumBorder(),
           ),
@@ -185,10 +190,10 @@ class StartAgain extends StatelessWidget {
     );
   }
 
-  void _navigateToNextScreen(BuildContext context) {
+  void _navigateToNextScreen(BuildContext context, String? email) {
     time.cancel();
     logicScoreQuiz.resetScore();
     Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => ClassicQuestionWithImagePage()));
+        builder: (context) => ClassicQuestionWithImagePage(email: email)));
   }
 }

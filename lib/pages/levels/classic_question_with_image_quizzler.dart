@@ -8,20 +8,29 @@ import 'package:quiz_fake_news/pages/congrulations/congrulations_nivel2.dart';
 import 'package:quiz_fake_news/pages/common_actions.dart';
 import 'package:quiz_fake_news/pages/gameover/game_over_level2.dart';
 import 'package:quiz_fake_news/pages/time_is_up.dart';
+import 'package:quiz_fake_news/repositories/ranking_repository.dart';
 import 'package:quiz_fake_news/widgets/counter_time.dart';
 import 'package:quiz_fake_news/widgets/stop_question.dart';
 
 LogicScoreQuiz logicScoreQuiz = LogicScoreQuiz();
+RankingRepository ranking = RankingRepository();
 
 class ClassicQuestionWithImagePage extends StatefulWidget {
+  late final String? email;
+
+  ClassicQuestionWithImagePage({required this.email});
+
   @override
   _ClassicQuestionWithImagePageState createState() =>
-      _ClassicQuestionWithImagePageState();
+      _ClassicQuestionWithImagePageState(email: email);
 }
 
 class _ClassicQuestionWithImagePageState
     extends State<ClassicQuestionWithImagePage> {
   final controller = Level2Controller();
+  late final String? email;
+
+  _ClassicQuestionWithImagePageState({required this.email});
 
   int _counter = 0;
   late Timer _timer;
@@ -150,10 +159,12 @@ class _ClassicQuestionWithImagePageState
           logicScoreQuiz.resetScore();
           logicScoreQuiz.incrementScore(
               logicScoreQuiz.calculationScore(getPointRight(), _counter));
-
+          ranking.save(totalScoreLevel2, email, 'level2');
           Navigator.of(context).push(MaterialPageRoute(
               builder: (context) => CongratulationsNivel2(
-                  score: totalScoreLevel2.toString(), time: _timer)));
+                  score: totalScoreLevel2.toString(),
+                  time: _timer,
+                  email: email)));
 
           _timer.cancel();
           reset();

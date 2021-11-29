@@ -15,7 +15,7 @@ import 'package:quiz_fake_news/widgets/stop_question.dart';
 import '../congrulations/congrulations_nivel1.dart';
 
 LogicScoreQuiz logicScoreQuiz = LogicScoreQuiz();
-Ranking1Repository ranking = Ranking1Repository();
+RankingRepository ranking = RankingRepository();
 
 class PageHome extends StatefulWidget {
   late final String? email;
@@ -167,10 +167,12 @@ class _PageHomeState extends State<PageHome> {
           } else {
             totalScoreLevel1 = logicScoreQuiz.totalScore();
             logicScoreQuiz.resetScore();
-            ranking.save(totalScoreLevel1, email);
+            ranking.save(totalScoreLevel1, email, 'level1');
             Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) => CongrulationNivel1(
-                    score: totalScoreLevel1.toString(), time: _timer)));
+                    score: totalScoreLevel1.toString(),
+                    time: _timer,
+                    email: email)));
 
             _timer.cancel();
             reset();
