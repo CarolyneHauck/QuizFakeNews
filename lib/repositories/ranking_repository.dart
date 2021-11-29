@@ -19,8 +19,9 @@ class RankingRepository {
     var data = await FirebaseFirestore.instance
         .collection(level)
         .orderBy('points')
+        .limitToLast(3)
         .get();
-    for (int i = 0; i < data.docs.length; i++) {
+    for (int i = 0; i < 3; i++) {
       Ranking model = Ranking(
           name: data.docs[i].data()['name'],
           points: data.docs[i].data()['points']);
