@@ -1,5 +1,7 @@
 # Quiz_fake_news
 
+Projeto de conclusão do curso de engenharia de software.
+<br /><br />
 ● AuthCheck() é a classe responsável por verificar se existe algum usuário logado, caso sim redirecionar para a view de ClassicQuestionQuizzler e caso não direcionar para a View de Login.<br />
 ● Login (View) é a classe que apresenta uma interface visual para o usuário acessar o jogo.<br />
 ● Cadastro (View) é a classe que apresenta uma interface visual para o usuário criar seu
